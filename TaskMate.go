@@ -160,3 +160,50 @@ func deleteTask() {
 	fmt.Println("Task deleted!")
 
 }
+
+func markTaskDone() {
+
+	var tasktarget string
+	fmt.Print("Enter task name to mark as done: ")
+	fmt.Scan(&tasktarget)
+
+	index := -1
+	i := 0
+	for i < taskCount && index == -1 {
+		if tableTask[i].name == tasktarget {
+			index = i
+		}
+		i++
+	}
+
+	if index == -1 {
+		fmt.Println("Task not found")
+		return
+	}
+
+	tableTask[index].done = true
+	fmt.Println("Task marked as done!")
+
+}
+
+func displayAll() {
+	if taskCount == 0 {
+		fmt.Println("No tasks recorded.")
+		return
+	}
+	fmt.Println("=======================================================")
+	fmt.Printf("%-20s %-12s %-10s %-8s %-5s\n", "Name", "Room", "Difficulty", "Duration", "Done")
+	fmt.Println("=======================================================")
+
+	i := 0
+	for i < taskCount {
+		status := "No"
+		if tableTask[i].done {
+			status = "Yes"
+		}
+		fmt.Printf("%-20s %-12s %-10d %-8d %-5s\n",
+			tableTask[i].name, tableTask[i].room, tableTask[i].difficulty, tableTask[i].duration, status)
+		i++
+	}
+	fmt.Println("=======================================================")
+}
