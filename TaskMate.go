@@ -297,3 +297,55 @@ func sortByRoom() {
 	}
 	fmt.Println("Tasks sorted by room.")
 }
+
+func isAlreadySortedByDifficulty() bool {
+	i := 0
+	for i < taskCount-1 {
+		if tableTask[i].difficulty > tableTask[i+1].difficulty {
+			return false
+		}
+		i++
+	}
+	return true
+}
+
+func isAlreadySortedByDuration() bool {
+	i := 0
+	for i < taskCount-1 {
+		if tableTask[i].duration > tableTask[i+1].duration {
+			return false
+		}
+		i++
+	}
+	return true
+}
+
+func sortMenu() {
+	choice := -1
+	for choice != 0 {
+		fmt.Println("\n-- Sort Menu --")
+		fmt.Println("1. Selection Sort by Difficulty")
+		fmt.Println("2. Insertion Sort by Duration")
+		fmt.Println("0. Back")
+		fmt.Print("Choice: ")
+		fmt.Scan(&choice)
+
+		if choice == 1 {
+			if isAlreadySortedByDifficulty() {
+				fmt.Println("Data is already sorted by difficulty, no need to sort.")
+			} else {
+				selectionSortByDifficulty()
+			}
+		} else if choice == 2 {
+			if isAlreadySortedByDuration() {
+				fmt.Println("Data is already sorted by duration, no need to sort.")
+			} else {
+				insertionSortByDuration()
+			}
+		} else if choice == 0 {
+			// back
+		} else {
+			fmt.Println("Invalid choice.")
+		}
+	}
+}
