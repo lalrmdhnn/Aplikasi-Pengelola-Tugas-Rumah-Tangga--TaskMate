@@ -191,15 +191,27 @@ func displayAll() {
 }
 
 func searchMenu() {
-	var searchchoice string
-	fmt.Print("Search by name or room? (name/room): ")
+	var searchchoice int
+	fmt.Println("\n-- Search Menu --")
+	fmt.Println("1. Linear search by Name")
+	fmt.Println("2. Binary search by Room")
+	fmt.Println("0. Back")
+	fmt.Print("Choice: ")
 	fmt.Scan(&searchchoice)
 
-	if searchchoice == "name" { //using linear search
-		searchByName()
+	for searchchoice != 0 {
+		if searchchoice == 1 { //using linear search
+			searchByName()
 
-	} else if searchchoice == "room" { //using binary search
-		searchByRoom()
+		} else if searchchoice == 2 { //using binary search
+			if !checkIfSorted() { // check if the tasks are sorted by room before performing binary search
+				// sortByRoom()
+				searchByRoom()
+			} else {
+				searchByRoom()
+			}
+
+		}
 	}
 
 }
@@ -233,7 +245,7 @@ func searchByRoom() { //binary search
 
 	for left <= right {
 		mid := (left + right) / 2
-		if tableTask[mid].room == target {
+		if tableTask[mid].room == target && !found {
 			fmt.Printf("Task found: \n %s in room %s, difficulty %d, duration %d minutes, done: %t\n",
 				tableTask[mid].name, tableTask[mid].room, tableTask[mid].difficulty, tableTask[mid].duration, tableTask[mid].done)
 			found = true
@@ -249,3 +261,24 @@ func searchByRoom() { //binary search
 	}
 
 }
+
+func checkIfSorted() bool {
+	// check if the tasks are sorted by room before performing binary search
+	isSorted := true
+	i := 1
+	for i < taskCount {
+		if tableTask[i].room < tableTask[i-1].room {
+			isSorted = false
+			break
+		}
+		i++
+	}
+
+	if !isSorted {
+		fmt.Println("Tasks are not sorted by room. Please sort the tasks first.")
+		return false
+	}
+	return true
+}
+
+//create sortMenu
