@@ -196,45 +196,56 @@ func searchMenu() {
 	fmt.Scan(&searchchoice)
 
 	if searchchoice == "name" { //using linear search
-		var target string
-		fmt.Print("Enter task name to search: ")
-		fmt.Scan(&target)
+		searchByName()
 
-		i := 0
-		for i < taskCount {
-			if tableTask[i].name == target {
-				fmt.Printf("Task found: %s in room %s, difficulty %d, duration %d minutes, done: %t\n",
-					tableTask[i].name, tableTask[i].room, tableTask[i].difficulty, tableTask[i].duration, tableTask[i].done)
-				return
-			}
-			i++
-		}
-		fmt.Println("Task not found.")
 	} else if searchchoice == "room" { //using binary search
-		var target string
-		fmt.Print("Enter room name to search: ")
-		fmt.Scan(&target)
+		searchByRoom()
+	}
 
-		left := 0
-		right := taskCount - 1
-		found := false
+}
 
-		for left <= right {
-			mid := (left + right) / 2
-			if tableTask[mid].room == target {
-				fmt.Printf("Task found: %s in room %s, difficulty %d, duration %d minutes, done: %t\n",
-					tableTask[mid].name, tableTask[mid].room, tableTask[mid].difficulty, tableTask[mid].duration, tableTask[mid].done)
-				found = true
-			} else if tableTask[mid].room < target {
-				left = mid + 1
-			} else {
-				right = mid - 1
-			}
+// seperate search functions for duration and difficulty
+func searchByName() { //linear search
+	var target string
+	fmt.Print("Enter task name to search: ")
+	fmt.Scan(&target)
+
+	i := 0
+	for i < taskCount {
+		if tableTask[i].name == target {
+			fmt.Printf("Task found: \n %s in room %s, difficulty %d, duration %d minutes, done: %t\n",
+				tableTask[i].name, tableTask[i].room, tableTask[i].difficulty, tableTask[i].duration, tableTask[i].done)
+			return
 		}
+		i++
+	}
+	fmt.Println("No tasks found with that name.")
+}
 
-		if !found {
-			fmt.Println("No tasks found in that room.")
+func searchByRoom() { //binary search
+	var target string
+	fmt.Print("Enter room name to search: ")
+	fmt.Scan(&target)
+
+	left := 0
+	right := taskCount - 1
+	found := false
+
+	for left <= right {
+		mid := (left + right) / 2
+		if tableTask[mid].room == target {
+			fmt.Printf("Task found: \n %s in room %s, difficulty %d, duration %d minutes, done: %t\n",
+				tableTask[mid].name, tableTask[mid].room, tableTask[mid].difficulty, tableTask[mid].duration, tableTask[mid].done)
+			found = true
+		} else if tableTask[mid].room < target {
+			left = mid + 1
+		} else {
+			right = mid - 1
 		}
+	}
+
+	if !found {
+		fmt.Println("No tasks found in that room.")
 	}
 
 }
