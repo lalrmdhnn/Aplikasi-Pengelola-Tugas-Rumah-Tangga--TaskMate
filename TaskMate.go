@@ -57,3 +57,106 @@ func main() {
 		}
 	}
 }
+
+func Printdata(arr arrParticipant, n int) {
+	for i := 0; i < n; i++ {
+		fmt.Printf("%s %s %d %d\n", arr[i].id, arr[i].name, arr[i].score, arr[i].duration)
+	}
+	fmt.Println()
+}
+
+func scoresort(arr *arrParticipant, n int) {
+	for i := 1; i < n; i++ {
+		key := arr[i]
+		j := i - 1
+
+		for j >= 0 && (arr[j].score < key.score || (arr[j].score == key.score && arr[j].duration > key.duration)) {
+			arr[j+1] = arr[j]
+			j--
+		}
+		arr[j+1] = key
+	}
+}
+
+func addTask() {
+
+	if taskCount >= maxTasks {
+		fmt.Println("Task table is full")
+		return
+	}
+
+	fmt.Print("Task name    : ")
+	fmt.Scan(&tableTask[taskCount].name)
+	fmt.Print("Room/category: ")
+	fmt.Scan(&tableTask[taskCount].room)
+	fmt.Print("Difficulty (1-5): ")
+	fmt.Scan(&tableTask[taskCount].difficulty)
+	fmt.Print("Duration (minutes): ")
+	fmt.Scan(&tableTask[taskCount].duration)
+	tableTask[taskCount].done = false
+	taskCount++
+	fmt.Println("Task added!")
+
+}
+
+func editTask() {
+
+	var tasktarget string
+	fmt.Print("Enter task name to edit: ")
+	fmt.Scan(&tasktarget)
+
+	index := -1
+	i := 0
+	for i < taskCount && index == -1 {
+		if tableTask[i].name == tasktarget {
+			index = i
+		}
+		i++
+	}
+
+	if index == -1 {
+		fmt.Println("Task not found")
+		return
+	}
+
+	fmt.Print("New name    : ")
+	fmt.Scan(&tableTask[index].name)
+	fmt.Print("New room    : ")
+	fmt.Scan(&tableTask[index].room)
+	fmt.Print("New difficulty (1-5): ")
+	fmt.Scan(&tableTask[index].difficulty)
+	fmt.Print("New duration (minutes): ")
+	fmt.Scan(&tableTask[index].duration)
+	fmt.Println("Task updated!")
+
+}
+
+func deleteTask() {
+
+	var tasktarget string
+	fmt.Print("Enter task name to delete: ")
+	fmt.Scan(&tasktarget)
+
+	index := -1
+	i := 0
+	for i < taskCount && index == -1 {
+		if tableTask[i].name == tasktarget {
+			index = i
+		}
+		i++
+	}
+
+	if index == -1 {
+		fmt.Println("Task not found")
+		return
+	}
+
+	i = index
+	for i < taskCount-1 {
+		tableTask[i] = tableTask[i+1]
+		i++
+	}
+	taskCount--
+	fmt.Println("Task deleted!")
+
+}
