@@ -282,3 +282,18 @@ func checkIfSorted() bool {
 }
 
 //create sortMenu
+func sortByRoom() {
+	// insertion sort by room
+	i := 1
+	for i < taskCount {
+		key := tableTask[i]
+		j := i - 1
+		for j >= 0 && tableTask[j].room > key.room {
+			tableTask[j+1] = tableTask[j]
+			j--
+		}
+		tableTask[j+1] = key
+		i++
+	}
+	fmt.Println("Tasks sorted by room.")
+}
