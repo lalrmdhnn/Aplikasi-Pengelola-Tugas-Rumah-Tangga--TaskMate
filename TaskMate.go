@@ -58,28 +58,8 @@ func main() {
 	}
 }
 
-func Printdata(arr arrParticipant, n int) {
-	for i := 0; i < n; i++ {
-		fmt.Printf("%s %s %d %d\n", arr[i].id, arr[i].name, arr[i].score, arr[i].duration)
-	}
-	fmt.Println()
-}
-
-func scoresort(arr *arrParticipant, n int) {
-	for i := 1; i < n; i++ {
-		key := arr[i]
-		j := i - 1
-
-		for j >= 0 && (arr[j].score < key.score || (arr[j].score == key.score && arr[j].duration > key.duration)) {
-			arr[j+1] = arr[j]
-			j--
-		}
-		arr[j+1] = key
-	}
-}
-
 func addTask() {
-
+	//good
 	if taskCount >= maxTasks {
 		fmt.Println("Task table is full")
 		return
@@ -100,7 +80,7 @@ func addTask() {
 }
 
 func editTask() {
-
+	//good
 	var tasktarget string
 	fmt.Print("Enter task name to edit: ")
 	fmt.Scan(&tasktarget)
@@ -132,7 +112,7 @@ func editTask() {
 }
 
 func deleteTask() {
-
+	//okay good
 	var tasktarget string
 	fmt.Print("Enter task name to delete: ")
 	fmt.Scan(&tasktarget)
