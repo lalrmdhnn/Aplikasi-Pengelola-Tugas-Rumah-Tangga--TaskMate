@@ -2,8 +2,6 @@ package main
 
 import "fmt"
 
-const maxTasks = 100
-
 // Biodata (group member) :
 
 // Hilal Ramadhan 10301254004
@@ -26,12 +24,15 @@ const maxTasks = 100
 // showStatistics()
 // creating the program ( each member has their part )
 
+const maxTasks = 100
+
 // list elements needed for task management (the data going to be stored)
 type Task struct {
 	name       string
 	room       string
 	difficulty int
 	duration   int
+	timetaken  int
 	done       bool
 }
 
@@ -167,29 +168,29 @@ func deleteTask() {
 }
 
 // creating the sub-programs to mark task as done
+// when marking a task as done, the user will be asked to input how long it took to complete the task,
+// and the data will be stored in the timetaken variable, which can be used later for statistics
 func markTaskDone() {
-
-	var tasktarget string
+	var target string
 	fmt.Print("Enter task name to mark as done: ")
-	fmt.Scan(&tasktarget)
+	fmt.Scan(&target)
 
-	index := -1
 	i := 0
-	for i < taskCount && index == -1 {
-		if tableTask[i].name == tasktarget {
-			index = i
+	for i < taskCount {
+		if tableTask[i].name == target {
+			if tableTask[i].done {
+				fmt.Println("Task is already marked as done.")
+				return
+			}
+			tableTask[i].done = true
+			fmt.Print("How long did it take? (minutes): ")
+			fmt.Scan(&tableTask[i].timetaken)
+			fmt.Println("Task marked as done!")
+			return
 		}
 		i++
 	}
-
-	if index == -1 {
-		fmt.Println("Task not found")
-		return
-	}
-
-	tableTask[index].done = true
-	fmt.Println("Task marked as done!")
-
+	fmt.Println("Task not found.")
 }
 
 // creating the sub-programs to display all data
@@ -325,6 +326,8 @@ func sortByRoom() {
 	fmt.Println("Tasks sorted by room.")
 }
 
+// check if the tasks are already sorted by difficulty
+// did alot of sub-programs to check if the data is already sorted before performing the sorting algorithm, to optimize the program and avoid unnecessary sorting
 func isAlreadySortedByDifficulty() bool {
 	i := 0
 	for i < taskCount-1 {
@@ -376,4 +379,38 @@ func sortMenu() {
 			fmt.Println("Invalid choice.")
 		}
 	}
+}
+
+func selectionSortByDifficulty() {
+	i := 0
+	for i < taskCount-1 {
+		minIndex := i
+		j := i + 1
+		for j < taskCount {
+			if tableTask[j].difficulty < tableTask[minIndex].difficulty {
+				minIndex = j
+			}
+			j++
+		}
+		if minIndex != i {
+			tableTask[i], tableTask[minIndex] = tableTask[minIndex], tableTask[i]
+		}
+		i++
+	}
+	fmt.Println("Tasks sorted by difficulty.")
+}
+
+func insertionSortByDuration() {
+	i := 1
+	for i < taskCount {
+		key := tableTask[i]
+		j := i - 1
+		for j >= 0 && tableTask[j].duration > key.duration {
+			tableTask[j+1] = tableTask[j]
+			j--
+		}
+		tableTask[j+1] = key
+		i++
+	}
+	fmt.Println("Tasks sorted by duration.")
 }
