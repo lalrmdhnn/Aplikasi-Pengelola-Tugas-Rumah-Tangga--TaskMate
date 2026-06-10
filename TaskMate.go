@@ -5,14 +5,24 @@ import "fmt"
 // Biodata (group member) :
 
 // Hilal Ramadhan 10301254004
+// project description, func main()
+// searchMenu(), searchByName(), searchByRoom(), checkIfSorted()
+// selectionSortByDifficulty(), insertionSortByDuration()
+// showStatistics()
+
 // Bryan Junata Teezar Prasetyo 103012540015
+// addTask(), editTask(), deleteTask(), markTaskDone(), displayAll()
+// sortByRoom(),isAlreadySortedByDifficulty(), isAlreadySortedByDuration()
+// sortMenu()
+
 // Project Description : TaskMate is an application for managing and scheduling various household tasks on a daily basis. The main data used consists of task type, difficulty level, and estimated working time. The users of the application are family members or household residents. Specifications:
 
-// a. Users can add, modify, and delete household task records. b. The system can record job descriptions, difficulty levels, and task durations in minutes. c. Users can search for task data based on the task name or room category using Sequential Search and Binary Search. d. Users can sort task data based on difficulty level or estimated completion time using Selection Sort and Insertion Sort. e. The system can display statistics on the number of completed tasks and the average amount of time spent working. Display the results in an informative format. (This last sentence is inferred if the original text was truncated after "Tampilkan de..."; if you have the complete text, I can translate it exactly.). this is a second semester for algorithm and programming so mostly logic no built in functions.
+// a. Users can add, modify, and delete household task records.
+// b. The system can record job descriptions, difficulty levels, and task durations in minutes.
+// c. Users can search for task data based on the task name or room category using Sequential Search and Binary Search.
+// d. Users can sort task data based on difficulty level or estimated completion time using Selection Sort and Insertion Sort.
+// e. The system can display statistics on the number of completed tasks and the average amount of time spent working. Display the results in an informative format.
 
-// How we approch the project :
-
-// analysing the problem
 // listing the sub-program needed to be made
 // addTask()
 // editTask()
@@ -70,9 +80,9 @@ func main() {
 		} else if choice == 6 {
 			searchMenu()
 		} else if choice == 7 {
-			// sortMenu()
+			sortMenu()
 		} else if choice == 8 {
-			// showStatistics()
+			showStatistics()
 		} else if choice == 0 {
 			fmt.Println("Goodbye!")
 		} else {
@@ -158,11 +168,11 @@ func deleteTask() {
 	}
 
 	i = index
-	for i < taskCount-1 {
+	for i < taskCount-1 { // shift the tasks after the deleted task to the left
 		tableTask[i] = tableTask[i+1]
 		i++
 	}
-	taskCount--
+	taskCount-- //decrement the task count after deleting a task
 	fmt.Println("Task deleted!")
 
 }
@@ -194,7 +204,7 @@ func markTaskDone() {
 }
 
 // creating the sub-programs to display all data
-
+// simple loop to display all the tasks in a nice format, showing the name, room, difficulty, duration, and whether the task is done or not
 func displayAll() {
 
 	if taskCount == 0 {
@@ -218,6 +228,7 @@ func displayAll() {
 	fmt.Println("=======================================================")
 }
 
+// creating the sub-programs to search data
 func searchMenu() {
 	var searchchoice int
 	fmt.Println("\n-- Search Menu --")
@@ -227,19 +238,18 @@ func searchMenu() {
 	fmt.Print("Choice: ")
 	fmt.Scan(&searchchoice)
 
-	for searchchoice != 0 {
-		if searchchoice == 1 { //using linear search
-			searchByName()
+	if searchchoice == 1 { //using linear search
+		searchByName()
 
-		} else if searchchoice == 2 { //using binary search
-			if !checkIfSorted() { // check if the tasks are sorted by room before performing binary search
-				// sortByRoom()
-				searchByRoom()
-			} else {
-				searchByRoom()
-			}
-
+	} else if searchchoice == 2 { //using binary search
+		if checkIfSorted() { // check if the tasks are sorted by room before performing binary search
+			searchByRoom()
+		} else {
+			sortMenu() // if not sorted, sort the tasks by room first
+			searchByRoom()
 		}
+	} else {
+		return
 	}
 
 }
@@ -247,41 +257,57 @@ func searchMenu() {
 // seperate search functions for duration and difficulty
 func searchByName() { //linear search
 	var target string
-	fmt.Print("Enter task name to search: ")
+	fmt.Print("Enter task name to search (back to return): ")
 	fmt.Scan(&target)
 
+	if target == "back" {
+		return
+	}
+
 	i := 0
-	for i < taskCount {
+	found := false
+
+	for i < taskCount { //simple linear search by name, since the tasks are not sorted by name, we have to use linear search to find the target task
 		if tableTask[i].name == target {
 			fmt.Printf("Task found: \n %s in room %s, difficulty %d, duration %d minutes, done: %t\n",
 				tableTask[i].name, tableTask[i].room, tableTask[i].difficulty, tableTask[i].duration, tableTask[i].done)
-			return
+			found = true
 		}
 		i++
 	}
-	fmt.Println("No tasks found with that name.")
+	if !found {
+		fmt.Println("Task not found.")
+	}
 }
 
-func searchByRoom() { //binary search
+// binary search by room, since the tasks are sorted by room, we can use binary search to find the target room faster than linear search
+func searchByRoom() {
 	var target string
-	fmt.Print("Enter room name to search: ")
+	fmt.Print("Enter room number to search (back to return): ")
 	fmt.Scan(&target)
+
+	if target == "back" {
+		return
+	}
 
 	left := 0
 	right := taskCount - 1
 	found := false
-
+	// binary search by room, since the tasks are sorted by room, we can use binary search to find the target room faster than linear search
 	for left <= right {
 		mid := (left + right) / 2
+
 		if tableTask[mid].room == target && !found {
 			fmt.Printf("Task found: \n %s in room %s, difficulty %d, duration %d minutes, done: %t\n",
 				tableTask[mid].name, tableTask[mid].room, tableTask[mid].difficulty, tableTask[mid].duration, tableTask[mid].done)
 			found = true
+			break
 		} else if tableTask[mid].room < target {
 			left = mid + 1
 		} else {
 			right = mid - 1
 		}
+
 	}
 
 	if !found {
@@ -339,6 +365,8 @@ func isAlreadySortedByDifficulty() bool {
 	return true
 }
 
+// another function to check if the tasks are already sorted by duration
+// just a simple incremental check to see if the duration of the current task is greater than the next task, if it is, then the data is not sorted by duration
 func isAlreadySortedByDuration() bool {
 	i := 0
 	for i < taskCount-1 {
@@ -351,12 +379,15 @@ func isAlreadySortedByDuration() bool {
 }
 
 // creating the sub-programs to sort data
+// sortbydifficulty, sortbyduration, sortbyroom (for binary search)
+
 func sortMenu() {
 	choice := -1
 	for choice != 0 {
 		fmt.Println("\n-- Sort Menu --")
 		fmt.Println("1. Selection Sort by Difficulty")
 		fmt.Println("2. Insertion Sort by Duration")
+		fmt.Println("3. Sort by Room (for binary search)")
 		fmt.Println("0. Back")
 		fmt.Print("Choice: ")
 		fmt.Scan(&choice)
@@ -373,6 +404,12 @@ func sortMenu() {
 			} else {
 				insertionSortByDuration()
 			}
+		} else if choice == 3 {
+			if checkIfSorted() {
+				fmt.Println("Data is already sorted by room, no need to sort.")
+			} else { //being called from the searchMenu, so we can directly call the sortByRoom function without having to go back to the sortMenu again
+				sortByRoom()
+			}
 		} else if choice == 0 {
 			// back
 		} else {
@@ -381,6 +418,9 @@ func sortMenu() {
 	}
 }
 
+// selection sort by difficulty, since the tasks are not sorted by difficulty
+// we have to use selection sort to sort the tasks by difficulty
+// which is a simple sorting algorithm that works by repeatedly selecting the minimum element from the unsorted part and putting it at the beginning of the sorted part
 func selectionSortByDifficulty() {
 	i := 0
 	for i < taskCount-1 {
@@ -400,6 +440,9 @@ func selectionSortByDifficulty() {
 	fmt.Println("Tasks sorted by difficulty.")
 }
 
+// insertion sort by duration, since the tasks are not sorted by duration
+// we have to use insertion sort to sort the tasks by duration
+// which is a simple sorting algorithm that works by repeatedly inserting the current element into the sorted part of the array
 func insertionSortByDuration() {
 	i := 1
 	for i < taskCount {
@@ -413,4 +456,39 @@ func insertionSortByDuration() {
 		i++
 	}
 	fmt.Println("Tasks sorted by duration.")
+}
+
+// just like the displayAll function, we will display the statistics in a nice format
+//
+//	showing the total number of tasks, the number of completed tasks, and the average time spent on completed tasks
+func showStatistics() {
+	if taskCount == 0 {
+		fmt.Println("No tasks recorded.")
+		return
+	}
+
+	completedTasks := 0
+	totalTime := 0
+
+	i := 0
+	// just a simple loop to count the number of completed tasks and the total time spent on completed tasks
+	// we will use the timetaken variable to calculate the average time spent on completed tasks, which is the total time divided by the number of completed tasks
+	for i < taskCount {
+		if tableTask[i].done {
+			completedTasks++
+			totalTime += tableTask[i].timetaken
+		}
+		i++
+	}
+
+	averageTime := 0
+	// since when adding a task we ask for estimated duration
+	// we added a feature to ask for the actual time taken when marking a task as done, so we can use that data to calculate the average time spent on completed tasks
+	if completedTasks > 0 {
+		averageTime = totalTime / completedTasks
+	}
+
+	fmt.Printf("Total tasks: %d\n", taskCount)
+	fmt.Printf("Completed tasks: %d\n", completedTasks)
+	fmt.Printf("Average time spent on completed tasks: %d minutes\n", averageTime)
 }
